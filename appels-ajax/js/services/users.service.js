@@ -1,5 +1,6 @@
 import { BASE_URL } from "../constants.js";
 
+
 class UsersService {
   constructor() {
     this.url = `${BASE_URL}/users`;
@@ -24,6 +25,7 @@ class UsersService {
         return users;
       });
   }
+
 }
 
 export default new UsersService();
