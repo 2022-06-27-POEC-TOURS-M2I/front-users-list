@@ -1,11 +1,11 @@
 import { UserRow } from "../components/user-row.js";
-import { UsersService } from "../services/users.service.js";
+import usersService from "../services/users.service.js";
 
 class Index {
-  constructor() {
+  constructor(userService) {
     this.users = [];
-    this.userService = new UsersService();
     this.$users = document.querySelector("#users");
+    this.userService = userService;
   }
 
   async render() {
@@ -17,7 +17,7 @@ class Index {
   }
 }
 
-const index = new Index();
+const index = new Index(usersService);
 index.render();
 
 //   # Ajouter page appelé : users-details.html

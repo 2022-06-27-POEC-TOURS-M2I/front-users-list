@@ -1,11 +1,20 @@
-const $userDetails = document.querySelector("#user-details");
+import { UserItem } from "../components/user-item.js";
+import usersService from "../services/users.service.js";
+import { getParams } from "../utils/get-param.js";
 
-fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
-  .then((response) => response.json())
-  .then((user) => {
-    $userDetails.innerHTML = `
-      <h1>${user.id} - ${user.name}</h1>
-   <p>${user.email}</p>
-    <p>${user.phone}</p>
-    `;
-  });
+class UsersDetails {
+  constructor(usersService) {
+    this.id = getParams("id");
+    this.$userDetails = document.querySelector("#user-details");
+    this.usersService = usersService;
+    this.user = null;
+  }
+
+  async render() {
+    this.user = await this.usersService.fetchUserById(this.id);
+    this.$userDetails.innerHTML = UserItem(this.user);
+  }
+}
+
+const usersDetails = new UsersDetails(usersService);
+usersDetails.render();

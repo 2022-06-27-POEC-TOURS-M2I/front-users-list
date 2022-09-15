@@ -19,7 +19,7 @@ export function UserRow(user) {
   const $actionsColumn = document.createElement("td");
   const $viewDetails = document.createElement("a");
   $viewDetails.innerText = "Voir";
-  $viewDetails.setAttribute("href", `./users-details.html?id=${user.id}`);
+  $viewDetails.setAttribute("href", `/pages/users-details.html?id=${user.id}`);
   $actionsColumn.appendChild($viewDetails);
   $websiteColumn.innerText = user.website;
 
