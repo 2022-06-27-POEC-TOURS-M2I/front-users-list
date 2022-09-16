@@ -8,64 +8,64 @@ const country = document.querySelector("#country");
 const submitButton = document.querySelector("#submit_button");
 const usersTableBody = document.querySelector("#users_list");
 
-const firstNameError = document.querySelector("#err_first_name");
-const lastNameError = document.querySelector("#err_last_name");
-const emailError = document.querySelector("#err_email");
-const phoneNumberError = document.querySelector("#err_phone_number");
-const countryError = document.querySelector("#err_country");
-
 const formFields = [firstName, lastName, email, country, phoneNumber];
 
 // # Tant que tous les champs ne sont pas remplis, ne rien ajouter au tableau
 // # Les messages d'erreurs doivent disparaitre pour les champs remplis
 //     Si dans une précédente validation ces champs étaient vides
+// #
+// # Ajouter un bouton supprimer dans la colonne action
+// # Supprimer la ligne quand on clique sur le bouton
+// # Supprimer les messages d'erreur quand les champs sont valides
 
 submitButton.addEventListener("click", function (event) {
   event.preventDefault();
 
-  if (!firstName.value) {
-    firstNameError.innerText = "Prenom cannot be empty";
-    firstNameError.style.color = "red";
-  } else {
-    firstNameError.innerText = "";
-  }
-
-  if (!lastName.value) {
-    lastNameError.innerText = "Nom cannot be empty";
-    lastNameError.style.color = "red";
-  } else {
-    lastNameError.innerText = "";
-  }
-
-  if (!email.value) {
-    emailError.innerText = "Email cannot be empty";
-    emailError.style.color = "red";
-  } else {
-    emailError.innerText = "";
-  }
-
-  if (!phoneNumber.value) {
-    phoneNumberError.innerText = "Phone cannot be empty";
-    phoneNumberError.style.color = "red";
-  } else {
-    phoneNumberError.innerText = "";
-  }
-
-  if (!country.value) {
-    countryError.innerText = "Country ne peut pas être vide";
-    countryError.style.color = "red";
-  } else {
-    countryError.innerText = "";
-  }
-
-  if (!formFields.some((field) => !field.value)) {
-    const row = document.createElement("tr");
+  if (!isFormValid1(formFields)) {
     for (const field of formFields) {
-      const column = CreateColumn(field.value);
-      row.appendChild(column);
+      displayErrorMessages(field);
     }
-
-    usersTableBody.appendChild(row);
+    return;
   }
-  return;
+
+  const row = document.createElement("tr");
+  for (const field of formFields) {
+    const column = CreateColumn(field.value);
+    row.appendChild(column);
+  }
+
+  usersTableBody.appendChild(row);
+
+  emptyForm(formFields);
 });
+
+function displayErrorMessages(field) {
+  const fieldDisplayName = field.getAttribute("data-name");
+  const errorField = document.querySelector(`#err_${field.name}`);
+  if (!field.value) {
+    errorField.innerText = `${fieldDisplayName} cannot be empty`;
+    errorField.classList.add("error");
+  } else {
+    errorField.innerText = "";
+  }
+}
+
+function isFormValid1(formFields) {
+  // return formFields.every((field) => field.value);
+  return formFields.every((field) => field.value !== "");
+}
+
+function isFormValid2(formFields) {
+  for (const field of formFields) {
+    if (!field.value) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function emptyForm(formFields) {
+  for (const field of formFields) {
+    field.value = "";
+  }
+}
