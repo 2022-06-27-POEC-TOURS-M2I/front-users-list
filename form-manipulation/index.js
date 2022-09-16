@@ -1,4 +1,7 @@
-import { CreateColumn } from "./js/components/create-column.js";
+import { CreateButton } from "./js/components/button.js";
+import { Table } from "./js/components/table.js";
+import { FormErrorUtils } from "./js/utils/form-errors.js";
+import { FormUtils } from "./js/utils/form-utils.js";
 
 const firstName = document.querySelector("#first_name");
 const lastName = document.querySelector("#last_name");
@@ -21,51 +24,44 @@ const formFields = [firstName, lastName, email, country, phoneNumber];
 submitButton.addEventListener("click", function (event) {
   event.preventDefault();
 
-  if (!isFormValid1(formFields)) {
+  if (!FormUtils.isFormValid1(formFields)) {
     for (const field of formFields) {
-      displayErrorMessages(field);
+      FormErrorUtils.displayErrorMessages(field);
     }
     return;
   }
 
-  const row = document.createElement("tr");
+  const columns = [];
   for (const field of formFields) {
-    const column = CreateColumn(field.value);
-    row.appendChild(column);
+    const column = Table.CreateColumn({ text: field.value });
+    columns.push(column);
   }
+
+  const deleteButton = CreateButton({
+    text: "Supprimer",
+    callback: Table.deleteRow,
+  });
+
+  const actionsColumn = Table.CreateColumn({
+    button: deleteButton,
+  });
+
+  actionsColumn.appendChild(deleteButton);
+
+  columns.push(actionsColumn);
+
+  const row = Table.CreateRow(columns);
 
   usersTableBody.appendChild(row);
 
-  emptyForm(formFields);
+  FormUtils.emptyForm(formFields);
+  FormErrorUtils.emptyErrors(formFields);
 });
 
-function displayErrorMessages(field) {
-  const fieldDisplayName = field.getAttribute("data-name");
-  const errorField = document.querySelector(`#err_${field.name}`);
-  if (!field.value) {
-    errorField.innerText = `${fieldDisplayName} cannot be empty`;
-    errorField.classList.add("error");
-  } else {
-    errorField.innerText = "";
-  }
-}
+//
 
-function isFormValid1(formFields) {
-  // return formFields.every((field) => field.value);
-  return formFields.every((field) => field.value !== "");
-}
-
-function isFormValid2(formFields) {
-  for (const field of formFields) {
-    if (!field.value) {
-      return false;
-    }
-  }
-  return true;
-}
-
-function emptyForm(formFields) {
-  for (const field of formFields) {
-    field.value = "";
-  }
-}
+// function loopField(formFields, callback) {
+//   for (const field of formFields) {
+//     callback(field);
+//   }
+// }
